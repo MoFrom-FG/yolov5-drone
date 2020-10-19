@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="prometheus_mission" type="mocap_formation_change" name="mocap_formation_change" output="screen">
+        <param name="DIAMOND_intervals" value="5"/>
+    </node>
+
+</launch>

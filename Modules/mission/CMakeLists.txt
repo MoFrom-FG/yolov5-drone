@@ -108,6 +108,25 @@ add_executable(fake_detectioninfo test/fake_detectioninfo.cpp)
 add_dependencies(fake_detectioninfo prometheus_mission_gencpp)
 target_link_libraries(fake_detectioninfo ${catkin_LIBRARIES})
 
+add_executable(mocap_formation_setmode mocap_formation/mocap_formation_setmode.cpp)
+add_dependencies(mocap_formation_setmode prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_setmode ${catkin_LIBRARIES})
+
+add_executable(mocap_formation_change mocap_formation/mocap_formation_change.cpp)
+add_dependencies(mocap_formation_change prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_change ${catkin_LIBRARIES})
+
+add_executable(mocap_formation_control mocap_formation/mocap_formation_control.cpp)
+add_dependencies(mocap_formation_control prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_control ${catkin_LIBRARIES})
+
+add_executable(mocap_formation_move mocap_formation/mocap_formation_move.cpp)
+add_dependencies(mocap_formation_move prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_move ${catkin_LIBRARIES})
+
+add_executable(mocap_formation_getpose mocap_formation/mocap_formation_getpose.cpp)
+add_dependencies(mocap_formation_getpose prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_getpose ${catkin_LIBRARIES})
 
 #############
 ## Install ##

@@ -1,0 +1,8 @@
+<launch>
+
+    <node pkg="prometheus_mission" type="mocap_formation_control" name="mocap_formation_control" output="screen">
+        <param name="FORMATION_DISTANCE_x" value="1"/>
+        <param name="FORMATION_DISTANCE_y" value="2"/>
+    </node>
+
+</launch>

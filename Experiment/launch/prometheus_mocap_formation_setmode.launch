@@ -1,0 +1,8 @@
+<launch>
+
+    <node pkg="prometheus_mission" type="mocap_formation_setmode" name="mocap_formation_setmode" output="screen">
+        <param name="OFFBOARD_intervals" value="3"/>
+        <param name="LAND_intervals" value="3"/>
+    </node>
+
+</launch>
