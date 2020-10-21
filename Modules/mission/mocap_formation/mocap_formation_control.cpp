@@ -283,7 +283,7 @@ void mocap_formation::printf_formation_state()
     }
 
     //2号机当前模式
-    std::cout << " [ " << uav1_state.mode << " ] "  << std::endl;
+    std::cout << " [ " << uav2_state.mode << " ] "  << std::endl;
     //2号机当前位置
     std::cout << "Position_uav2 [X Y Z]: " << uav2_current_pose.pose.position.x << "[ m ]" << uav2_current_pose.pose.position.y << "[ m ]" << uav2_current_pose.pose.position.z << "[ m ]" << std::endl;
 
@@ -309,7 +309,7 @@ void mocap_formation::printf_formation_state()
     }
 
     //3号机当前模式
-    std::cout << " [ " << uav1_state.mode << " ] "  << std::endl;
+    std::cout << " [ " << uav3_state.mode << " ] "  << std::endl;
     //3号机当前位置
     std::cout << "Position_uav3 [X Y Z]: " << uav3_current_pose.pose.position.x << "[ m ]" << uav3_current_pose.pose.position.y << "[ m ]" << uav3_current_pose.pose.position.z << "[ m ]" << std::endl;
 
