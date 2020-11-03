@@ -237,33 +237,23 @@ void mocap_formation::set_mode()
         std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>--------<<<<<<<<<<<<<<<<<<<<<<<<<<< " << std::endl;
         std::cout << "Input the drone state:  0 for armed and offboard, 1 for land, 2 for disarmed" << std::endl;
         //获取用户输入的值
-        std::cin >> mode;
-        //判断值是否正确,正确则进入正常流程,错误则打印警告信息
-        if((mode >= 0) && (mode <= 2))
+        std::cin >> formation_mode;
+        switch(formation_mode)
         {
-            formation_mode = mode;
-            switch(formation_mode)
-            {
-                //offboard模式
-                case 0:
-                    set_formation_offboard();
-                    break;
+            //offboard模式
+            case 0:
+                set_formation_offboard();
+                break;
                 
-                //land模式
-                case 1:
-                    set_formation_land();
-                    break;
+            //land模式
+            case 1:
+                set_formation_land();
+                break;
 
-                //上锁
-                case 2:
-                    set_formation_disarmed();
-                    break;
-            }
-        }
-        else
-        {
-            //输入错误
-            ROS_WARN("input error,please input again");
+            //上锁
+            case 2:
+                set_formation_disarmed();
+                break;
         }
         
     }
