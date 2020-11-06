@@ -133,6 +133,9 @@ class mocap_formation
         //获取动捕系统位置数据函数
         void getpose();
 
+        //是否为仿真函数
+        void is_sim();
+
     private:
 
         //创建句柄
@@ -308,20 +311,20 @@ class mocap_formation
         //5号机集群队形位置差值
         Eigen::Vector3d uav5_offset_pose;
 
-        //1号机机体移动初值
-        Eigen::Vector3d uav1_body_pose;
+        //1号机仿真位置差值
+        Eigen::Vector3d uav1_gazebo_offset_pose;
 
-        //2号机机体移动初值
-        Eigen::Vector3d uav2_body_pose;
+        //2号机仿真位置差值
+        Eigen::Vector3d uav2_gazebo_offset_pose;
 
-        //3号机机体移动初值
-        Eigen::Vector3d uav3_body_pose;
+        //3号机仿真位置差值
+        Eigen::Vector3d uav3_gazebo_offset_pose;
 
-        //4号机机体移动初值
-        Eigen::Vector3d uav4_body_pose;
+        //4号机仿真位置差值
+        Eigen::Vector3d uav4_gazebo_offset_pose;
 
-        //5号机机体移动初值
-        Eigen::Vector3d uav5_body_pose;
+        //5号机仿真位置差值
+        Eigen::Vector3d uav5_gazebo_offset_pose;
 
         //1号机当前状态
         mavros_msgs::State uav1_state;
@@ -394,6 +397,9 @@ class mocap_formation
 
         //集群模式
         int formation_mode;
+
+        //是否为仿真.true代表为仿真,false代表真机
+        bool sim;
 
         //程序运行初始时间
         ros::Time begin_time;

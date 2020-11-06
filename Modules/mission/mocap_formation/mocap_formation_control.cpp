@@ -44,6 +44,25 @@ void mocap_formation::init()
     //获取集群Y轴间隔距离参数
     ros::param::param<double>("~FORMATION_DISTANCE_y", formation_distance_y, 2);
 
+    //获取仿真中位置差值
+    ros::param::param<double>("~uav1_x", uav1_gazebo_offset_pose[0], 0);
+    ros::param::param<double>("~uav1_y", uav1_gazebo_offset_pose[1], 0);
+
+    ros::param::param<double>("~uav2_x", uav2_gazebo_offset_pose[0], 0);
+    ros::param::param<double>("~uav2_y", uav2_gazebo_offset_pose[1], 0);
+
+    ros::param::param<double>("~uav3_x", uav3_gazebo_offset_pose[0], 0);
+    ros::param::param<double>("~uav3_y", uav3_gazebo_offset_pose[1], 0);
+
+    ros::param::param<double>("~uav4_x", uav4_gazebo_offset_pose[0], 0);
+    ros::param::param<double>("~uav4_y", uav4_gazebo_offset_pose[1], 0);
+
+    ros::param::param<double>("~uav5_x", uav5_gazebo_offset_pose[0], 0);
+    ros::param::param<double>("~uav5_y", uav5_gazebo_offset_pose[1], 0);
+
+    //获取是否为仿真参数
+    ros::param::param<bool>("~sim",sim,false);
+
     //初始队形设置为一字形
     formation_data.type = prometheus_msgs::Formation::HORIZONTAL;
 
@@ -51,32 +70,53 @@ void mocap_formation::init()
     begin_time = ros::Time::now();
 }
 
+void mocap_formation::is_sim()
+{
+    if(!sim)
+    {
+        uav1_gazebo_offset_pose[0] = 0;
+        uav1_gazebo_offset_pose[1] = 0;
+
+        uav2_gazebo_offset_pose[0] = 0;
+        uav2_gazebo_offset_pose[1] = 0;
+
+        uav3_gazebo_offset_pose[0] = 0;
+        uav3_gazebo_offset_pose[1] = 0;
+
+        uav4_gazebo_offset_pose[0] = 0;
+        uav4_gazebo_offset_pose[1] = 0;
+
+        uav5_gazebo_offset_pose[0] = 0;
+        uav5_gazebo_offset_pose[1] = 0;
+    }
+}
+
 //设置一字队形
 void mocap_formation::set_horizontal()
 {
     //1号机
-    uav1_offset_pose[0] = 0;
-    uav1_offset_pose[1] = 0;
+    uav1_offset_pose[0] = 0 - uav1_gazebo_offset_pose[0];
+    uav1_offset_pose[1] = 0 - uav1_gazebo_offset_pose[1];
     uav1_offset_pose[2] = 0;
 
     //2号机
-    uav2_offset_pose[0] = 0;
-    uav2_offset_pose[1] = 2 * formation_distance_y;
+    uav2_offset_pose[0] = 0 - uav2_gazebo_offset_pose[0];
+    uav2_offset_pose[1] = 2 * formation_distance_y - uav2_gazebo_offset_pose[1];
     uav2_offset_pose[2] = 0;
 
     //3号机
-    uav3_offset_pose[0] = 0;
-    uav3_offset_pose[1] = formation_distance_y;
+    uav3_offset_pose[0] = 0 - uav3_gazebo_offset_pose[0];
+    uav3_offset_pose[1] = formation_distance_y - uav3_gazebo_offset_pose[1];
     uav3_offset_pose[2] = 0;
 
     //4号机
-    uav4_offset_pose[0] = 0;
-    uav4_offset_pose[1] = -formation_distance_y;
+    uav4_offset_pose[0] = 0 - uav4_gazebo_offset_pose[0];
+    uav4_offset_pose[1] = -formation_distance_y - uav4_gazebo_offset_pose[1];
     uav4_offset_pose[2] = 0;
 
     //5号机
-    uav5_offset_pose[0] = 0;
-    uav5_offset_pose[1] = -2 * formation_distance_y;
+    uav5_offset_pose[0] = 0 - uav5_gazebo_offset_pose[0];
+    uav5_offset_pose[1] = -2 * formation_distance_y - uav5_gazebo_offset_pose[1];
     uav5_offset_pose[2] = 0;
 
 }
@@ -85,28 +125,28 @@ void mocap_formation::set_horizontal()
 void mocap_formation::set_triangle()
 {
     //1号机
-    uav1_offset_pose[0] = 2 * formation_distance_x;
-    uav1_offset_pose[1] = 0;
+    uav1_offset_pose[0] = 2 * formation_distance_x - uav1_gazebo_offset_pose[0];
+    uav1_offset_pose[1] = 0 - uav1_gazebo_offset_pose[1];
     uav1_offset_pose[2] = 0;
 
     //2号机
-    uav2_offset_pose[0] = 0;
-    uav2_offset_pose[1] = 2 * formation_distance_y;
+    uav2_offset_pose[0] = 0 - uav2_gazebo_offset_pose[0];
+    uav2_offset_pose[1] = 2 * formation_distance_y - uav2_gazebo_offset_pose[1];
     uav2_offset_pose[2] = 0;
 
     //3号机
-    uav3_offset_pose[0] = formation_distance_x;
-    uav3_offset_pose[1] = formation_distance_y;
+    uav3_offset_pose[0] = formation_distance_x - uav3_gazebo_offset_pose[0];
+    uav3_offset_pose[1] = formation_distance_y - uav3_gazebo_offset_pose[1];
     uav3_offset_pose[2] = 0;
 
     //4号机
-    uav4_offset_pose[0] = formation_distance_x;
-    uav4_offset_pose[1] = -formation_distance_y;
+    uav4_offset_pose[0] = formation_distance_x - uav4_gazebo_offset_pose[0];
+    uav4_offset_pose[1] = -formation_distance_y - uav4_gazebo_offset_pose[1];
     uav4_offset_pose[2] = 0;
 
     //5号机
-    uav5_offset_pose[0] = 0;
-    uav5_offset_pose[1] = -2 * formation_distance_y;
+    uav5_offset_pose[0] = 0 - uav5_gazebo_offset_pose[0];
+    uav5_offset_pose[1] = -2 * formation_distance_y - uav5_gazebo_offset_pose[1];
     uav5_offset_pose[2] = 0;
 }
 
@@ -114,28 +154,28 @@ void mocap_formation::set_triangle()
 void mocap_formation::set_diamond()
 {
     //1号机
-    uav1_offset_pose[0] = 0;
-    uav1_offset_pose[1] = 0;
+    uav1_offset_pose[0] = 0 - uav1_gazebo_offset_pose[0];
+    uav1_offset_pose[1] = 0 - uav1_gazebo_offset_pose[1];
     uav1_offset_pose[2] = 0;
 
     //2号机
-    uav2_offset_pose[0] = 0;
-    uav2_offset_pose[1] = 2 * formation_distance_y;
+    uav2_offset_pose[0] = 0 - uav2_gazebo_offset_pose[0];
+    uav2_offset_pose[1] = 2 * formation_distance_y - uav2_gazebo_offset_pose[1];
     uav2_offset_pose[2] = 0;
 
     //3号机
-    uav3_offset_pose[0] = 2 * formation_distance_x;
-    uav3_offset_pose[1] = 0;
+    uav3_offset_pose[0] = 2 * formation_distance_x - uav3_gazebo_offset_pose[0];
+    uav3_offset_pose[1] = 0 - uav3_gazebo_offset_pose[1];
     uav3_offset_pose[2] = 0;
 
     //4号机
-    uav4_offset_pose[0] = -2 * formation_distance_x;
-    uav4_offset_pose[1] = 0;
+    uav4_offset_pose[0] = -2 * formation_distance_x - uav4_gazebo_offset_pose[0];
+    uav4_offset_pose[1] = 0 - uav4_gazebo_offset_pose[1];
     uav4_offset_pose[2] = 0;
 
     //5号机
-    uav5_offset_pose[0] = 0;
-    uav5_offset_pose[1] = -2 * formation_distance_y;
+    uav5_offset_pose[0] = 0 - uav5_gazebo_offset_pose[0];
+    uav5_offset_pose[1] = -2 * formation_distance_y - uav5_gazebo_offset_pose[1];
     uav5_offset_pose[2] = 0;
 }
 
@@ -143,28 +183,28 @@ void mocap_formation::set_diamond()
 void mocap_formation::set_diamond_stage1()
 {
     //1号机
-    uav1_offset_pose[0] = 0;
-    uav1_offset_pose[1] = 0;
+    uav1_offset_pose[0] = 0 - uav1_gazebo_offset_pose[0];
+    uav1_offset_pose[1] = 0 - uav1_gazebo_offset_pose[1];
     uav1_offset_pose[2] = 0;
 
     //2号机
-    uav2_offset_pose[0] = 0;
-    uav2_offset_pose[1] = 2 * formation_distance_y;
+    uav2_offset_pose[0] = 0 - uav2_gazebo_offset_pose[0];
+    uav2_offset_pose[1] = 2 * formation_distance_y - uav2_gazebo_offset_pose[1];
     uav2_offset_pose[2] = 0;
 
     //3号机
-    uav3_offset_pose[0] = 2 * formation_distance_x;
-    uav3_offset_pose[1] = formation_distance_y;
+    uav3_offset_pose[0] = 2 * formation_distance_x - uav3_gazebo_offset_pose[0];
+    uav3_offset_pose[1] = formation_distance_y - uav3_gazebo_offset_pose[1];
     uav3_offset_pose[2] = 0;
 
     //4号机
-    uav4_offset_pose[0] = -2 * formation_distance_x;
-    uav4_offset_pose[1] = -formation_distance_y;
+    uav4_offset_pose[0] = -2 * formation_distance_x - uav4_gazebo_offset_pose[0];
+    uav4_offset_pose[1] = -formation_distance_y - uav4_gazebo_offset_pose[1];
     uav4_offset_pose[2] = 0;
 
     //5号机
-    uav5_offset_pose[0] = 0;
-    uav5_offset_pose[1] = -2 * formation_distance_y;
+    uav5_offset_pose[0] = 0 - uav5_gazebo_offset_pose[0];
+    uav5_offset_pose[1] = -2 * formation_distance_y - uav5_gazebo_offset_pose[1];
     uav5_offset_pose[2] = 0;
 }
 
@@ -371,6 +411,7 @@ void mocap_formation::control()
 {
     //初始化
     init();
+    is_sim();
     while(ros::ok())
     {
         //处理回调函数

@@ -66,7 +66,7 @@
 		</node>
     </group>
 
-
+	
     <!-- 2号飞机 -->
     <group ns="uav2">
         <!-- 参数配置-->
@@ -76,8 +76,8 @@
 		<arg name="sdf" default="$(find prometheus_gazebo)/models/MultiUAV/P300_uav2/P300_uav2.sdf"/>
 		<arg name="model" default="P300_uav2"/>
 		<!-- 初始位置，Yaw为偏航角 -->
-		<arg name="x" default="0"/>
-		<arg name="y" default="1"/>
+		<arg name="x" default="5"/>
+		<arg name="y" default="5"/>
 		<arg name="z" default="0.164"/>
 		<arg name="Yaw" default="0"/>
 		<!-- Mavros参数 -->
@@ -117,8 +117,8 @@
 		<arg name="sdf" default="$(find prometheus_gazebo)/models/MultiUAV/P300_uav3/P300_uav3.sdf"/>
 		<arg name="model" default="P300_uav3"/>
 		<!-- 初始位置，Yaw为偏航角 -->
-		<arg name="x" default="0"/>
-		<arg name="y" default="0.5"/>
+		<arg name="x" default="-5"/>
+		<arg name="y" default="5"/>
 		<arg name="z" default="0.164"/>
 		<arg name="Yaw" default="0"/>
 		<!-- Mavros参数 -->
@@ -158,8 +158,8 @@
 		<arg name="sdf" default="$(find prometheus_gazebo)/models/MultiUAV/P300_uav4/P300_uav4.sdf"/>
 		<arg name="model" default="P300_uav4"/>
 		<!-- 初始位置，Yaw为偏航角 -->
-		<arg name="x" default="0"/>
-		<arg name="y" default="-0.5"/>
+		<arg name="x" default="5"/>
+		<arg name="y" default="-5"/>
 		<arg name="z" default="0.164"/>
 		<arg name="Yaw" default="0"/>
 		<!-- Mavros参数 -->
@@ -199,8 +199,8 @@
 		<arg name="sdf" default="$(find prometheus_gazebo)/models/MultiUAV/P300_uav5/P300_uav5.sdf"/>
 		<arg name="model" default="P300_uav5"/>
 		<!-- 初始位置，Yaw为偏航角 -->
-		<arg name="x" default="0"/>
-		<arg name="y" default="-1"/>
+		<arg name="x" default="-5"/>
+		<arg name="y" default="-5"/>
 		<arg name="z" default="0.164"/>
 		<arg name="Yaw" default="0"/>
 		<!-- Mavros参数 -->

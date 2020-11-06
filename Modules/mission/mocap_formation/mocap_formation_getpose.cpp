@@ -29,10 +29,10 @@ void mocap_formation::init()
 
 void mocap_formation::getpose()
 {
+    //初始化
+    init();
     while(ros::ok())
     {
-        //初始化
-        init();
         //处理回调函数,
         ros::spinOnce();
         //打上时间戳后,发布位置数据到飞控
@@ -46,7 +46,7 @@ void mocap_formation::getpose()
         uav3_mocap_pose_pub.publish(uav3_current_pose);
         uav4_mocap_pose_pub.publish(uav4_current_pose);
         uav5_mocap_pose_pub.publish(uav5_current_pose);
-        usleep(30000);
+        usleep(10000);
     }
 }
 
