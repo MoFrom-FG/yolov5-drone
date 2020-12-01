@@ -128,6 +128,14 @@ add_executable(mocap_formation_getpose mocap_formation/mocap_formation_getpose.c
 add_dependencies(mocap_formation_getpose prometheus_mission_gencpp)
 target_link_libraries(mocap_formation_getpose ${catkin_LIBRARIES})
 
+add_executable(mocap_formation_square mocap_formation/mocap_formation_square.cpp)
+add_dependencies(mocap_formation_square prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_square ${catkin_LIBRARIES})
+
+add_executable(mocap_formation_state mocap_formation/mocap_formation_state.cpp)
+add_dependencies(mocap_formation_state prometheus_mission_gencpp)
+target_link_libraries(mocap_formation_state ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############

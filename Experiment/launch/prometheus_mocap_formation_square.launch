@@ -1,0 +1,47 @@
+<launch>
+
+    <arg name="uav1_x" default="0"/>
+    <arg name="uav1_y" default="0"/>
+
+    <arg name="uav2_x" default="5"/>
+    <arg name="uav2_y" default="5"/>
+
+    <arg name="uav3_x" default="-5"/>
+    <arg name="uav3_y" default="5"/>
+
+    <arg name="uav4_x" default="5"/>
+    <arg name="uav4_y" default="-5"/>
+
+    <arg name="uav5_x" default="-5"/>
+    <arg name="uav5_y" default="-5"/>
+
+    <arg name="sim" default="true"/>
+
+    <node pkg="prometheus_mission" type="mocap_formation_square" name="mocap_formation_square" output="screen">
+        <param name="square_length" value="4"/>
+        <param name="13_height" value="2"/>
+        <param name="24_height" value="2"/>
+        <param name="hold_time" value="10"/>
+        <param name="stage1_time" value="5"/>
+        <param name="sim" value="true"/>
+
+        <!--1~5号机的初始位置-->
+	    <param name="uav1_x" value="$(arg uav1_x)"/>
+	    <param name="uav1_y" value="$(arg uav1_y)"/>
+
+	    <param name="uav2_x" value="$(arg uav2_x)"/>
+	    <param name="uav2_y" value="$(arg uav2_y)"/>
+
+	    <param name="uav3_x" value="$(arg uav3_x)"/>
+	    <param name="uav3_y" value="$(arg uav3_y)"/>
+
+	    <param name="uav4_x" value="$(arg uav4_x)"/>
+	    <param name="uav4_y" value="$(arg uav4_y)"/>
+
+	    <param name="uav5_x" value="$(arg uav5_x)"/>
+	    <param name="uav5_y" value="$(arg uav5_y)"/>
+
+        <param name="sim" value="$(arg sim)"/>
+    </node>
+
+</launch>

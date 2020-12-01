@@ -49,6 +49,9 @@ class mocap_formation
         //队形变换函数
         void change();
 
+        //状态函数
+        void state();
+
         //终端输入控制数据函数
         void move();
 
