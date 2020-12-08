@@ -309,14 +309,19 @@ int main(int argc, char **argv)
             }else
             {
                 //此处切换会manual模式是因为:PX4默认在offboard模式且有控制的情况下没法上锁,直接使用飞控中的land模式
-                _command_to_mavros.mode_cmd.request.custom_mode = "MANUAL";
+                _command_to_mavros.mode_cmd.request.custom_mode = "AUTO.LAND";
                 _command_to_mavros.set_mode_client.call(_command_to_mavros.mode_cmd);
 
-                _command_to_mavros.arm_cmd.request.value = false;
-                _command_to_mavros.arming_client.call(_command_to_mavros.arm_cmd);
-                pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME, "Disarming...");
+                // _command_to_mavros.arm_cmd.request.value = false;
+                // _command_to_mavros.arming_client.call(_command_to_mavros.arm_cmd);
+                // pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME, "Disarming...");
 
-                pub_message(message_pub, prometheus_msgs::Message::WARN, NODE_NAME, "LAND: switch to MANUAL filght mode");
+                pub_message(message_pub, prometheus_msgs::Message::WARN, NODE_NAME, "LAND: switch to autolanding filght mode");
+            }
+
+            if(_DroneState.landed)
+            {
+                Command_Now.Mode = prometheus_msgs::ControlCommand::Idle;
             }
 
             break;
