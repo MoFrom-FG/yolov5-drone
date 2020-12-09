@@ -116,6 +116,10 @@ add_executable(fake_detectioninfo test/fake_detectioninfo.cpp)
 add_dependencies(fake_detectioninfo prometheus_mission_gencpp)
 target_link_libraries(fake_detectioninfo ${catkin_LIBRARIES})
 
+add_executable(autonomous_landing_on_ground autonomous_landing/autonomous_landing_on_ground.cpp)
+add_dependencies(autonomous_landing_on_ground prometheus_mission_gencpp)
+target_link_libraries(autonomous_landing_on_ground ${catkin_LIBRARIES})
+
 
 #############
 ## Install ##

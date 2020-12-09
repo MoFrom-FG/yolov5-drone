@@ -1,6 +1,6 @@
 # Parameter for autonomous_landing.cpp
 ##追踪距离阈值
-distance_thres: 0.55
+distance_thres: 0.3
 
 ## ukf仍有bug 建议不使用
 use_ukf: false
@@ -15,8 +15,8 @@ kpz_land: 0.1
 
 ##降落起始点 静止目标建议起飞点：[1,2,6] 移动目标建议起飞点[-5,0,5]
 start_point_x: 1
-start_point_y: 2
-start_point_z: 4.5
+start_point_y: 1
+start_point_z: 4
 
 UKF_CAR:
     std_a_: 0.01
