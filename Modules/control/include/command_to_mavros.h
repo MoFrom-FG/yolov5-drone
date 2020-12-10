@@ -198,7 +198,15 @@ class command_to_mavros
 
 
 };
-
+/**
+ * 详细参考：https://docs.px4.io/master/en/flight_modes/offboard.html
+ * 以下type_mask与mavlink定义的类型值不一样。
+ * 0000 0000 0000 0000 
+ * 0001 0000 0000 0000   --->   4096 takeoff 起飞指定点
+ * 0010 0000 0000 0000   --->   8192 land 降落指定点
+ * 0100 0000 0000 0000   --->   12288 loiter 悬停指定点 （旋翼悬停，固定翼盘旋）
+ * 1000 0000 0000 0000   --->   16384 idle 怠速状态(油门为零，俯仰横滚为零)
+*/
 void command_to_mavros::takeoff()
 {
     mavros_msgs::PositionTarget pos_setpoint;
