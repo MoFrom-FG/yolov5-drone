@@ -410,4 +410,4 @@ class mocap_formation
 };
 
 
-#endif
+#endif //MOCAP_FORMATION_H
