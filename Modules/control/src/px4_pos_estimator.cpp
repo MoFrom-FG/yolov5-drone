@@ -57,6 +57,10 @@ Eigen::Vector3d Euler_gazebo;
 Eigen::Vector3d pos_drone_slam;
 Eigen::Quaterniond q_slam;
 Eigen::Vector3d Euler_slam;
+//---------------------------------------gps相关------------------------------------------
+Eigen::Vector3d pos_drone_gps;
+Eigen::Quaterniond q_gps;
+Eigen::Vector3d Euler_gps;
 //---------------------------------------发布相关变量--------------------------------------------
 ros::Publisher vision_pub;
 ros::Publisher drone_state_pub;
@@ -186,6 +190,27 @@ void t265_cb(const nav_msgs::Odometry::ConstPtr &msg)
     }
 }
 
+void gps_cb(const geometry_msgs::PoseStamped::ConstPtr &msg)
+{
+    if (msg->header.frame_id == "world")
+    {
+        pos_drone_gps= Eigen::Vector3d(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z);
+        // pos_drone_gps[0] = msg->pose.pose.position.x + pos_offset[0];
+        // pos_drone_gps[1] = msg->pose.pose.position.y + pos_offset[1];
+        // pos_drone_gps[2] = msg->pose.pose.position.z + pos_offset[2];
+
+        q_gps = Eigen::Quaterniond(msg->pose.orientation.w, msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z);
+        Euler_gps = quaternion_to_euler(q_gps);
+        // Euler_t265[2] = Euler_t265[2] + yaw_offset;
+        // q_t265 = quaternion_from_rpy(Euler_t265);
+    }
+    else
+    {
+        pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME, "wrong gps frame id.");
+    }
+}
+
+
 void timerCallback(const ros::TimerEvent &e)
 {
     pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME, "Program is running.");
@@ -220,6 +245,9 @@ int main(int argc, char **argv)
 
     // 【订阅】gazebo仿真真值
     ros::Subscriber gazebo_sub = nh.subscribe<nav_msgs::Odometry>("/prometheus/ground_truth/p300_basic", 100, gazebo_cb);
+
+    //  【订阅】gps local真值
+    ros::Subscriber gps_sub = nh.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose", 100, gps_cb);
 
     // 【订阅】SLAM估计位姿
     ros::Subscriber slam_sub = nh.subscribe<geometry_msgs::PoseStamped>("/slam/pose", 100, slam_cb);
@@ -282,6 +310,9 @@ void send_to_fcu()
         vision.pose.orientation.y = q_mocap.y();
         vision.pose.orientation.z = q_mocap.z();
         vision.pose.orientation.w = q_mocap.w();
+
+	vision.header.stamp = ros::Time::now();
+    	vision_pub.publish(vision);
       
         // 此处时间主要用于监测动捕，T265设备是否正常工作
         if( prometheus_control_utils::get_time_in_sec(last_timestamp) > TIMEOUT_MAX)
@@ -302,6 +333,9 @@ void send_to_fcu()
         vision.pose.orientation.y = q_laser.y();
         vision.pose.orientation.z = q_laser.z();
         vision.pose.orientation.w = q_laser.w();
+
+	vision.header.stamp = ros::Time::now();
+    	vision_pub.publish(vision);
     }
     else if (input_source == 2)
     {
@@ -313,6 +347,9 @@ void send_to_fcu()
         vision.pose.orientation.y = q_gazebo.y();
         vision.pose.orientation.z = q_gazebo.z();
         vision.pose.orientation.w = q_gazebo.w();
+
+	vision.header.stamp = ros::Time::now();
+    	vision_pub.publish(vision);
     }
     else if (input_source == 3)
     {
@@ -324,6 +361,9 @@ void send_to_fcu()
         vision.pose.orientation.y = q_t265.y();
         vision.pose.orientation.z = q_t265.z();
         vision.pose.orientation.w = q_t265.w();
+
+	vision.header.stamp = ros::Time::now();
+    	vision_pub.publish(vision);
     }
     else if (input_source == 4)
     {
@@ -335,10 +375,21 @@ void send_to_fcu()
         vision.pose.orientation.y = q_slam.y();
         vision.pose.orientation.z = q_slam.z();
         vision.pose.orientation.w = q_slam.w();
-    }
 
-    vision.header.stamp = ros::Time::now();
-    vision_pub.publish(vision);
+	vision.header.stamp = ros::Time::now();
+    	vision_pub.publish(vision);
+    }// gps
+    else if (input_source == 5)
+    {
+        vision.pose.position.x = pos_drone_gps[0];
+        vision.pose.position.y = pos_drone_gps[1];
+        vision.pose.position.z = pos_drone_gps[2];
+
+        vision.pose.orientation.x = q_gps.x();
+        vision.pose.orientation.y = q_gps.y();
+        vision.pose.orientation.z = q_gps.z();
+        vision.pose.orientation.w = q_gps.w();
+    }
 }
 
 void pub_to_nodes(prometheus_msgs::DroneState State_from_fcu)
