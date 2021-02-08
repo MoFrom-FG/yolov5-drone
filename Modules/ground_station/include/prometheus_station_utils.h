@@ -21,8 +21,20 @@
 #include <prometheus_msgs/LogMessageDetection.h>
 #include <prometheus_msgs/LogMessagePlanning.h>
 #include <prometheus_msgs/DetectionInfo.h>
+#include <prometheus_msgs/ArucoInfo.h>
+#include <prometheus_msgs/IndoorSearch.h>
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/Path.h>
+//msg 头文件
+#include <mavros_msgs/CommandBool.h>
+#include <mavros_msgs/SetMode.h>
+#include <mavros_msgs/State.h>
+#include <mavros_msgs/AttitudeTarget.h>
+#include <mavros_msgs/PositionTarget.h>
+#include <mavros_msgs/ActuatorControl.h>
+#include <sensor_msgs/Imu.h>
+
+#include <geometry_msgs/PoseStamped.h>
 
 using namespace std;
 

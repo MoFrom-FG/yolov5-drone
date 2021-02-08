@@ -18,33 +18,69 @@ void Global_Planner::init(ros::NodeHandle& nh)
     is_2D = true;
 
     // 2D规划时,定高高度
-    nh.param("indoor_search/fly_height_2D", fly_height_2D, 1.5);
+    nh.param("global_planner/fly_height_2D", fly_height_2D, 1.5);
 
     // 安全距离，若膨胀距离设置已考虑安全距离，建议此处设为0
     safe_distance = 0.0;
     
     //每一段path的时间
-    nh.param("indoor_search/time_per_path", time_per_path, 1.0); 
+    nh.param("global_planner/time_per_path", time_per_path, 1.0); 
 
     // 重规划频率 
-    nh.param("indoor_search/replan_time", replan_time, 2.0); 
+    nh.param("global_planner/replan_time", replan_time, 2.0); 
 
     // 选择地图更新方式：　0代表全局点云，１代表局部点云，２代表激光雷达scan数据
-    nh.param("indoor_search/map_input", map_input, 0); 
+    nh.param("global_planner/map_input", map_input, 0); 
     
     // 是否为仿真模式
-    nh.param("indoor_search/sim_mode", sim_mode, false); 
+    nh.param("global_planner/sim_mode", sim_mode, false); 
 
     // 是否使用地图真值
-    nh.param("indoor_search/map_groundtruth", map_groundtruth, false); 
+    nh.param("global_planner/map_groundtruth", map_groundtruth, false); 
 
     // 航点个数
-    nh.param("indoor_search/waypoint/num", waypoint_num, 10);
+    nh.param("global_planner/waypoint_num", waypoint_num, 10);
 
+    // 初始化waypoint,后续可以变为参数输入
+    waypoint1[0] = 1.0;
+    waypoint1[1] = 7.0;
+    waypoint1[2] = fly_height_2D;
 
+    waypoint2[0] = 3.0;
+    waypoint2[1] = 1.0;
+    waypoint2[2] = fly_height_2D;
 
-    // 订阅 目标点
-    goal_sub = nh.subscribe<geometry_msgs::PoseStamped>("/prometheus/planning/goal", 1, &Global_Planner::goal_cb, this);
+    waypoint3[0] = 5.0;
+    waypoint3[1] = 7.0;
+    waypoint3[2] = fly_height_2D;
+
+    waypoint4[0] = 7.0;
+    waypoint4[1] = 1.0;
+    waypoint4[2] = fly_height_2D;
+
+    waypoint5[0] = 9.0;
+    waypoint5[1] = 7.0;
+    waypoint5[2] = fly_height_2D;
+
+    waypoint6[0] = 11.0;
+    waypoint6[1] = 1.0;
+    waypoint6[2] = fly_height_2D;
+
+    waypoint7[0] = 13.0;
+    waypoint7[1] = 7.0;
+    waypoint7[2] = fly_height_2D;
+
+    waypoint8[0] = 15.0;
+    waypoint8[1] = 1.0;
+    waypoint8[2] = fly_height_2D;    
+
+    waypoint9[0] = 11.1;
+    waypoint9[1] = 1.0;
+    waypoint9[2] = fly_height_2D; 
+
+    waypoint10[0] = 11.1;
+    waypoint10[1] = -1.0;
+    waypoint10[2] = fly_height_2D; 
 
     // 订阅 无人机状态
     drone_state_sub = nh.subscribe<prometheus_msgs::DroneState>("/prometheus/drone_state", 10, &Global_Planner::drone_state_cb, this);
@@ -67,24 +103,20 @@ void Global_Planner::init(ros::NodeHandle& nh)
     message_pub = nh.advertise<prometheus_msgs::Message>("/prometheus/message/global_planner", 10);
     // 发布路径用于显示
     path_cmd_pub   = nh.advertise<nav_msgs::Path>("/prometheus/global_planning/path_cmd",  10); 
-    // 定时器 安全检测
-    // safety_timer = nh.createTimer(ros::Duration(2.0), &Global_Planner::safety_cb, this); 
+
     // 定时器 规划器算法执行周期
-    mainloop_timer = nh.createTimer(ros::Duration(1.5), &Global_Planner::mainloop_cb, this);        
+    mainloop_timer = nh.createTimer(ros::Duration(1.5), &Global_Planner::mainloop_cb, this); 
+
     // 路径追踪循环，快速移动场景应当适当提高执行频率
-    // time_per_path
     track_path_timer = nh.createTimer(ros::Duration(time_per_path), &Global_Planner::track_path_cb, this);        
-
-
 
     // Astar algorithm
     Astar_ptr.reset(new Astar);
     Astar_ptr->init(nh);
     pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME, "A_star init.");
 
-
     // 规划器状态参数初始化
-    exec_state = EXEC_STATE::WAIT_GOAL;
+    exec_state = EXEC_STATE::TAKEOFF;
     odom_ready = false;
     drone_ready = false;
     goal_ready = false;
@@ -106,7 +138,7 @@ void Global_Planner::init(ros::NodeHandle& nh)
         int start_flag = 0;
         while(start_flag == 0)
         {
-            cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Global Planner<<<<<<<<<<<<<<<<<<<<<<<<<<< "<< endl;
+            cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>INDOOR SEARCH<<<<<<<<<<<<<<<<<<<<<<<<<<< "<< endl;
             cout << "Please input 1 for start:"<<endl;
             cin >> start_flag;
         }
@@ -118,15 +150,35 @@ void Global_Planner::init(ros::NodeHandle& nh)
         Command_Now.Reference_State.yaw_ref = 999;
         command_pub.publish(Command_Now);   
         cout << "Switch to OFFBOARD and arm ..."<<endl;
-        ros::Duration(3.0).sleep();
-        
+        ros::Duration(5.0).sleep();
+
         Command_Now.header.stamp = ros::Time::now();
-        Command_Now.Mode = prometheus_msgs::ControlCommand::Takeoff;
-        Command_Now.Command_ID = Command_Now.Command_ID + 1;
+        Command_Now.Mode                                = prometheus_msgs::ControlCommand::Move;
+        Command_Now.Command_ID                          = Command_Now.Command_ID + 1;
         Command_Now.source = NODE_NAME;
+        Command_Now.Reference_State.Move_mode           = prometheus_msgs::PositionReference::XYZ_POS;
+        Command_Now.Reference_State.Move_frame          = prometheus_msgs::PositionReference::ENU_FRAME;
+        Command_Now.Reference_State.position_ref[0]     = 0.7;
+        Command_Now.Reference_State.position_ref[1]     = -1.0;
+        Command_Now.Reference_State.position_ref[2]     = fly_height_2D;
+
         command_pub.publish(Command_Now);
         cout << "Takeoff ..."<<endl;
-        ros::Duration(3.0).sleep();
+        ros::Duration(5.0).sleep();
+
+        Command_Now.header.stamp = ros::Time::now();
+        Command_Now.Mode                                = prometheus_msgs::ControlCommand::Move;
+        Command_Now.Command_ID                          = Command_Now.Command_ID + 1;
+        Command_Now.source = NODE_NAME;
+        Command_Now.Reference_State.Move_mode           = prometheus_msgs::PositionReference::XYZ_POS;
+        Command_Now.Reference_State.Move_frame          = prometheus_msgs::PositionReference::ENU_FRAME;
+        Command_Now.Reference_State.position_ref[0]     = 0.7;
+        Command_Now.Reference_State.position_ref[1]     = 1.0;
+        Command_Now.Reference_State.position_ref[2]     = fly_height_2D;
+
+        command_pub.publish(Command_Now);
+        cout << "Move into the room ..."<<endl;
+        ros::Duration(5.0).sleep();
     }else
     {
         //　真实飞行情况：等待飞机状态变为offboard模式，然后发送起飞指令
@@ -303,24 +355,6 @@ void Global_Planner::track_path_cb(const ros::TimerEvent& e)
         return;
     }
 
-    // if(!is_safety)
-    // {
-    //     // 若无人机与障碍物之间的距离小于安全距离，则停止执行路径
-    //     // 但如何脱离该点呢？
-    //     pub_message(message_pub, prometheus_msgs::Message::WARN, NODE_NAME, "Drone Position Dangerous! STOP HERE and wait for new goal.");
-        
-    //     Command_Now.header.stamp = ros::Time::now();
-    //     Command_Now.Mode         = prometheus_msgs::ControlCommand::Hold;
-    //     Command_Now.Command_ID   = Command_Now.Command_ID + 1;
-    //     Command_Now.source = NODE_NAME;
-
-    //     command_pub.publish(Command_Now);
-
-    //     goal_ready = false;
-    //     exec_state = EXEC_STATE::WAIT_GOAL;
-        
-    //     return;
-    // }
     is_new_path = false;
 
     // 抵达终点
@@ -344,7 +378,7 @@ void Global_Planner::track_path_cb(const ros::TimerEvent& e)
         // 停止执行
         path_ok = false;
         // 转换状态为等待目标
-        exec_state = EXEC_STATE::WAIT_GOAL;
+        exec_state = EXEC_STATE::READY_FOR_NEW_WP;
         return;
     }
  
@@ -418,23 +452,82 @@ void Global_Planner::mainloop_cb(const ros::TimerEvent& e)
     
     switch (exec_state)
     {
-        case WAIT_GOAL:
+        case TAKEOFF:
         {
-            path_ok = false;
-            if(!goal_ready)
+            Eigen::Vector3d distance_to_start_point;
+            distance_to_start_point[0] = _DroneState.position[0] - 0.7;
+            distance_to_start_point[1] = _DroneState.position[1] - 1.0;
+            distance_to_start_point[2] = _DroneState.position[2] - fly_height_2D;
+            
+            if (distance_to_start_point.norm() < 0.2)
             {
-                if(exec_num == 10)
-                {
-                    message = "Waiting for a new goal.";
-                    pub_message(message_pub, prometheus_msgs::Message::WARN, NODE_NAME,message);
-                    exec_num=0;
-                }
-            }else
-            {
-                // 获取到目标点后，生成新轨迹
-                exec_state = EXEC_STATE::PLANNING;
-                goal_ready = false;
+                exec_state = EXEC_STATE::READY_FOR_NEW_WP;
             }
+            
+            break;
+        }
+        case READY_FOR_NEW_WP:
+        {
+            static int waypoint_now = 1;
+
+            path_ok = false;
+
+            if(waypoint_now == 1)
+            {
+                goal_pos = waypoint1;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint1(0), waypoint1(1), waypoint1(2));
+            }else if(waypoint_now == 2)
+            {
+                goal_pos = waypoint2;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint2(0), waypoint2(1), waypoint2(2));
+            }else if(waypoint_now == 3)
+            {
+                goal_pos = waypoint3;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint3(0), waypoint3(1), waypoint3(2));
+            }else if(waypoint_now == 4)
+            {
+                goal_pos = waypoint4;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint4(0), waypoint4(1), waypoint4(2));
+            }else if(waypoint_now == 5)
+            {
+                goal_pos = waypoint5;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint5(0), waypoint5(1), waypoint5(2));
+            }else if(waypoint_now == 2)
+            {
+                goal_pos = waypoint2;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint2(0), waypoint2(1), waypoint2(2));
+            }else if(waypoint_now == 6)
+            {
+                goal_pos = waypoint6;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint6(0), waypoint6(1), waypoint6(2));
+            }else if(waypoint_now == 7)
+            {
+                goal_pos = waypoint7;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint7(0), waypoint7(1), waypoint7(2));
+            }else if(waypoint_now == 8)
+            {
+                goal_pos = waypoint8;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint8(0), waypoint8(1), waypoint8(2));
+            }else if(waypoint_now == 9)
+            {
+                goal_pos = waypoint9;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint9(0), waypoint9(1), waypoint9(2));
+            }else if(waypoint_now == 10)
+            {
+                goal_pos = waypoint10;
+                sprintf(sp, "Moving to waypoint_%d: [%f, %f, %f]", waypoint_now, waypoint10(0), waypoint10(1), waypoint10(2));
+            }
+            
+            exec_state = EXEC_STATE::PLANNING;
+
+            if(waypoint_now == 11)
+            {
+                exec_state = EXEC_STATE::LANDING;
+                sprintf(sp, "Landing...");
+            }
+            
+            waypoint_now++;
+            pub_message(message_pub, prometheus_msgs::Message::NORMAL, NODE_NAME,sp);
             
             break;
         }
@@ -450,11 +543,10 @@ void Global_Planner::mainloop_cb(const ros::TimerEvent& e)
             // Astar algorithm
             astar_state = Astar_ptr->search(start_pos, goal_pos);
 
-            // 未寻找到路径
+            // 未寻找到路径,则会卡死在这里
             if(astar_state==Astar::NO_PATH)
             {
                 path_ok = false;
-                exec_state = EXEC_STATE::WAIT_GOAL;
                 pub_message(message_pub, prometheus_msgs::Message::WARN, NODE_NAME, "Planner can't find path!");
             }
             else
@@ -484,7 +576,7 @@ void Global_Planner::mainloop_cb(const ros::TimerEvent& e)
 
             break;
         }
-        case  LANDING:
+        case LANDING:
         {
             Command_Now.header.stamp = ros::Time::now();
             Command_Now.Mode         = prometheus_msgs::ControlCommand::Land;

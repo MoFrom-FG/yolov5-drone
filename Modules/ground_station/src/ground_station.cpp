@@ -14,17 +14,6 @@
 #include <ros/ros.h>
 #include <prometheus_station_utils.h>
 
-//msg 头文件
-#include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/SetMode.h>
-#include <mavros_msgs/State.h>
-#include <mavros_msgs/AttitudeTarget.h>
-#include <mavros_msgs/PositionTarget.h>
-#include <mavros_msgs/ActuatorControl.h>
-#include <sensor_msgs/Imu.h>
-
-#include <geometry_msgs/PoseStamped.h>
-
 using namespace std;
 //---------------------------------------相关参数-----------------------------------------------
 float refresh_time;
@@ -36,6 +25,7 @@ prometheus_msgs::ControlCommand Command_Now;                      //无人机当
 prometheus_msgs::AttitudeReference _AttitudeReference;
 
 prometheus_msgs::DetectionInfo detection_info;
+prometheus_msgs::IndoorSearch aruco_result;
 
 geometry_msgs::PoseStamped ref_pose;
 Eigen::Quaterniond q_fcu_target;
@@ -84,9 +74,11 @@ void landpad_det_cb(const prometheus_msgs::DetectionInfo::ConstPtr &msg)
     detection_info.position[0] = - msg->position[1];
     detection_info.position[1] = - msg->position[0];
     detection_info.position[2] = - msg->position[2];
-
 }
-
+void indoor_search_cb(const prometheus_msgs::IndoorSearch::ConstPtr &msg)
+{
+    aruco_result = *msg;
+}
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>主 函 数<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 int main(int argc, char **argv)
 {
@@ -112,6 +104,9 @@ int main(int argc, char **argv)
     if(mission_type == 1)
     {
         ros::Subscriber landpad_det_sub = nh.subscribe<prometheus_msgs::DetectionInfo>("/prometheus/object_detection/ellipse_det", 10, landpad_det_cb);
+    }else if(mission_type == 10)
+    {
+        ros::Subscriber aruco_sub = nh.subscribe<prometheus_msgs::IndoorSearch>("/prometheus/indoor_search/detection_result", 10, indoor_search_cb);
     }
     
     // 频率
@@ -188,6 +183,82 @@ void printf_info()
         }
         
         cout << "detection_result (body): " << detection_info.position[0] << " [m] "<< detection_info.position[1] << " [m] "<< detection_info.position[2] << " [m] "<<endl;
+    }else if(mission_type == 10)
+    {
+        cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>Indoor Search<<<<<<<<<<<<<<<<<<<<<<<<<<" <<endl;
+        
+        if(aruco_result.Aruco1.detected)
+        {
+            cout << aruco_result.Aruco1.aruco_num << ": [yes] " << aruco_result.Aruco1.position[0] << " [m] "<< aruco_result.Aruco1.position[1] << " [m] "<< aruco_result.Aruco1.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco1.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco2.detected)
+        {
+            cout << aruco_result.Aruco2.aruco_num << ": [yes] " << aruco_result.Aruco2.position[0] << " [m] "<< aruco_result.Aruco2.position[1] << " [m] "<< aruco_result.Aruco2.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco2.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco3.detected)
+        {
+            cout << aruco_result.Aruco3.aruco_num << ": [yes] " << aruco_result.Aruco3.position[0] << " [m] "<< aruco_result.Aruco3.position[1] << " [m] "<< aruco_result.Aruco3.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco3.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco4.detected)
+        {
+            cout << aruco_result.Aruco4.aruco_num << ": [yes] " << aruco_result.Aruco4.position[0] << " [m] "<< aruco_result.Aruco4.position[1] << " [m] "<< aruco_result.Aruco4.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco4.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco5.detected)
+        {
+            cout << aruco_result.Aruco5.aruco_num << ": [yes] " << aruco_result.Aruco5.position[0] << " [m] "<< aruco_result.Aruco5.position[1] << " [m] "<< aruco_result.Aruco5.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco5.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco6.detected)
+        {
+            cout << aruco_result.Aruco6.aruco_num << ": [yes] " << aruco_result.Aruco6.position[0] << " [m] "<< aruco_result.Aruco6.position[1] << " [m] "<< aruco_result.Aruco6.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco6.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco7.detected)
+        {
+            cout << aruco_result.Aruco7.aruco_num << ": [yes] " << aruco_result.Aruco7.position[0] << " [m] "<< aruco_result.Aruco7.position[1] << " [m] "<< aruco_result.Aruco7.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco7.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco8.detected)
+        {
+            cout << aruco_result.Aruco8.aruco_num << ": [yes] " << aruco_result.Aruco8.position[0] << " [m] "<< aruco_result.Aruco8.position[1] << " [m] "<< aruco_result.Aruco8.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco8.aruco_num << " [not] " <<endl;
+        }
+
+        if(aruco_result.Aruco9.detected)
+        {
+            cout << aruco_result.Aruco9.aruco_num << ": [yes] " << aruco_result.Aruco9.position[0] << " [m] "<< aruco_result.Aruco9.position[1] << " [m] "<< aruco_result.Aruco9.position[2] << " [m] "<<endl;
+        }else
+        {
+            cout << aruco_result.Aruco9.aruco_num << " [not] " <<endl;
+        }
+        
     }
 
 

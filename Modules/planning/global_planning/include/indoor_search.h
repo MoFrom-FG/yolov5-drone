@@ -55,6 +55,23 @@ private:
     bool map_groundtruth;
     int waypoint_num;
 
+    int waypoint_now;
+
+    Eigen::Vector3d waypoint1;
+    Eigen::Vector3d waypoint2;
+    Eigen::Vector3d waypoint3;
+    Eigen::Vector3d waypoint4;
+    Eigen::Vector3d waypoint5;
+    Eigen::Vector3d waypoint6;
+    Eigen::Vector3d waypoint7;
+    Eigen::Vector3d waypoint8;
+    Eigen::Vector3d waypoint9;
+    Eigen::Vector3d waypoint10;
+
+    char sp[100];
+
+
+
     // 本机位置
     // 邻机位置
     // 根据不同的输入（激光雷达输入、相机输入等）生成occupymap
@@ -113,7 +130,8 @@ private:
     // 五种状态机
     enum EXEC_STATE
     {
-        WAIT_GOAL,
+        TAKEOFF,
+        READY_FOR_NEW_WP,
         PLANNING,
         TRACKING,
         LANDING,

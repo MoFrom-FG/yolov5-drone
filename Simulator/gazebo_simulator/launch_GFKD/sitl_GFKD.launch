@@ -85,7 +85,7 @@
 	</node>
 	
 	<node pkg="prometheus_control" type="px4_sender" name="px4_sender" output="screen">
-		<rosparam command="load" file="$(find prometheus_gazebo)/config/prometheus_control_config/px4_sender.yaml"/>
+		<rosparam command="load" file="$(find prometheus_gazebo)/config/prometheus_control_config/px4_sender_GKFD.yaml"/>
 	</node>
 
 	<!-- run the ground_station.cpp -->

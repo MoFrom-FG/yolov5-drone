@@ -72,10 +72,9 @@
             </material>
         </visual>
       </link>
-
       <!-- 前墙海报 -->
       <link name="poster1">
-        <pose>2.0 7.65 1.5 0 1.57 1.57</pose>
+        <pose>3.0 7.65 1.5 0 1.57 1.57</pose>
         <visual name="visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
@@ -91,9 +90,8 @@
           </material>
         </visual>
       </link>
-      <!-- 前墙海报 -->
-      <!-- <link name="poster2">
-        <pose>4.95 5 1.5 0 1.57 0</pose>
+      <link name="poster2">
+        <pose>8.0 7.65 1.5 0 1.57 1.57</pose>
         <visual name="visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
@@ -104,14 +102,13 @@
           <material>
             <script>
               <uri>model://texture/texture.material</uri>
-              <name>Poster1</name>
+              <name>Poster2</name>
             </script>
           </material>
         </visual>
-      </link> -->
-      <!-- 前墙海报 -->
-      <!-- <link name="poster3">
-        <pose>4.95 -5 1.5 0 1.57 0</pose>
+      </link>
+      <link name="poster3">
+        <pose>14.0 7.65 1.5 0 1.57 1.57</pose>
         <visual name="visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
@@ -122,11 +119,11 @@
           <material>
             <script>
               <uri>model://texture/texture.material</uri>
-              <name>Poster1</name>
+              <name>Poster3</name>
             </script>
           </material>
         </visual>
-      </link> -->
+      </link>
     </model>
 
     <!-- 房间四周墙体，墙高统一设置为3米，无天花板 -->
@@ -280,7 +277,6 @@
             </material>
           </visual>
       </link>
-
     </model>
 
     <!-- 会议桌 -->
@@ -291,45 +287,45 @@
       </include>
     </model> -->
 
-    <!-- 办公桌
+    <!-- 办公桌 -->
     <model name='table1'>
       <include>
         <uri>model://table_chair</uri>
-	      <pose> 4 -0 0.01 0 0 1.57</pose>
+	      <pose> 6 5 0.01 0 0 1.57</pose>
       </include>
     </model>
     <model name='table2'>
       <include>
         <uri>model://table_chair</uri>
-	      <pose> 4 -3 0.01 0 0 1.57</pose>
+	      <pose> 8 3.5 0.01 0 0 1.57</pose>
       </include>
     </model>
     <model name='table3'>
       <include>
         <uri>model://table_chair</uri>
-	      <pose> 4 -6 0.01 0 0 1.57</pose>
+	      <pose> 14 5 0.01 0 0 1.57</pose>
       </include>
-    </model> -->
+    </model>
 
     <!-- 架子 -->
-    <!-- <model name='shelf1'>
+    <model name='shelf1'>
       <include>
         <uri>model://shelf</uri>
-	      <pose> 2 -7.9 0.01 0 0 0.0</pose>
+	      <pose> 17 1.0 0.01 0 0 1.57</pose>
       </include>
     </model>
     <model name='shelf2'>
       <include>
         <uri>model://shelf</uri>
-	      <pose> 0 -7.9 0.01 0 0 0.0</pose>
+	      <pose> 17 3.0 0.01 0 0 1.57</pose>
       </include>
     </model>
     <model name='shelf3'>
       <include>
         <uri>model://shelf</uri>
-	      <pose> -2 -7.9 0.01 0 0 0.0</pose>
+	      <pose> 17 5.0 0.01 0 0 1.57</pose>
       </include>
-    </model> -->
+    </model>
 
     <!-- 搜索目标：1-9 aruco -->
     <model name='aruco'>
@@ -510,7 +506,7 @@
     <model name='obstacle'>
       <static>true</static>
       <link name='pillar_1'>
-        <pose frame=''>2 3.0 1.0 0 -0 0</pose>
+        <pose frame=''>1.0 3.0 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -535,7 +531,7 @@
         </collision>
       </link>
       <link name='pillar_2'>
-        <pose frame=''>4 5.0 1.0 0 -0 0</pose>
+        <pose frame=''>2.0 5.0 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -560,7 +556,7 @@
         </collision>
       </link>
       <link name='pillar_3'>
-        <pose frame=''>6 2.5 1.0 0 -0 0</pose>
+        <pose frame=''>3.2 2.5 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -585,7 +581,7 @@
         </collision>
       </link>
       <link name='pillar_4'>
-        <pose frame=''>8 7.0 1.0 0 -0 0</pose>
+        <pose frame=''>5.0 3.0 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -610,7 +606,7 @@
         </collision>
       </link>
       <link name='pillar_5'>
-        <pose frame=''>10 4.0 1.0 0 -0 0</pose>
+        <pose frame=''>7.1 2.0 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -635,7 +631,7 @@
         </collision>
       </link>
       <link name='pillar_5'>
-        <pose frame=''>12 3.0 1.0 0 -0 0</pose>
+        <pose frame=''>8.9 5.5 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
@@ -660,7 +656,57 @@
         </collision>
       </link>
       <link name='pillar_6'>
-        <pose frame=''>14 3.4 1.0 0 -0 0</pose>
+        <pose frame=''>11.0 2.4 1.0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Green</name>
+            </script>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+      <link name='pillar_7'>
+        <pose frame=''>13.2 4.4 1.0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Green</name>
+            </script>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.2</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+      <link name='pillar_8'>
+        <pose frame=''>15.0 2.5 1.0 0 -0 0</pose>
         <visual name='visual'>
           <geometry>
             <cylinder>
