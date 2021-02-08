@@ -50,3 +50,17 @@ target_link_libraries(global_planner_main
        ${catkin_LIBRARIES}
 	   ${PCL_LIBRARIES}
 	)
+
+
+add_executable(indoor_search_main
+	src/indoor_search/indoor_search_node.cpp
+	src/indoor_search/indoor_search.cpp
+	src/A_star.cpp
+	src/occupy_map.cpp
+	src/tools.cpp
+	)
+
+target_link_libraries(indoor_search_main
+       ${catkin_LIBRARIES}
+	   ${PCL_LIBRARIES}
+	)
