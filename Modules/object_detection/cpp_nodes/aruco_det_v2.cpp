@@ -291,7 +291,10 @@ int main(int argc, char **argv)
                     q.normalize();
 
                     geometry_msgs::PoseStamped pose;
-                    pose.header.frame_id = "camera";
+                    // pose.header.frame_id = "camera";
+                    char fid_str[32];
+                    sprintf(fid_str, "aruco-%d", ids[i]);
+                    pose.header.frame_id = fid_str;
                     pose.pose.position.x = tvecs[i][0];
                     pose.pose.position.y = tvecs[i][1];
                     pose.pose.position.z = tvecs[i][2];
