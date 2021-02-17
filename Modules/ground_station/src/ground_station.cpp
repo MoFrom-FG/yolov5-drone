@@ -106,8 +106,10 @@ int main(int argc, char **argv)
         ros::Subscriber landpad_det_sub = nh.subscribe<prometheus_msgs::DetectionInfo>("/prometheus/object_detection/ellipse_det", 10, landpad_det_cb);
     }else if(mission_type == 10)
     {
-        ros::Subscriber aruco_sub = nh.subscribe<prometheus_msgs::IndoorSearch>("/prometheus/indoor_search/detection_result", 10, indoor_search_cb);
+        
     }
+
+    ros::Subscriber aruco_sub = nh.subscribe<prometheus_msgs::IndoorSearch>("/prometheus/indoor_search/detection_result", 10, indoor_search_cb);
     
     // 频率
     float hz = 1.0 / refresh_time;
