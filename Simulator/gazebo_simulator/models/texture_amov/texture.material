@@ -1,3 +1,35 @@
+material logo_wide
+{
+ technique
+ {
+   pass
+   {
+     texture_unit
+     {
+       // Relative to the location of the material script
+       texture amov_logo_wide.PNG
+       // Repeat the texture over the surface (4 per face)
+       scale 1.0 1.0
+     }
+   }
+ }
+}
+material point
+{
+ technique
+ {
+   pass
+   {
+     texture_unit
+     {
+       // Relative to the location of the material script
+       texture point.png
+       // Repeat the texture over the surface (4 per face)
+       scale 1.0 1.0
+     }
+   }
+ }
+}
 material logo_color
 {
  technique

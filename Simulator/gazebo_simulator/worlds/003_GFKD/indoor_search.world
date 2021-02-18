@@ -72,6 +72,231 @@
             </material>
         </visual>
       </link>
+      <!-- logo装饰 -->
+      <link name="logo_1">
+        <pose>3.0 -0.05 1.5 0 1.57 1.57</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.5 1.5 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>logo_color</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="logo_2">
+        <pose>6.0 -0.05 1.5 0 1.57 1.57</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.5 1.5 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>logo_color</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <!-- 起飞点 -->
+      <link name="takeoff">
+        <pose>0.7 -1.0 0.02 0 0.0 1.57</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.5 1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>takeoff_zone</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <!-- 降落点 -->
+      <link name="landing_zone">
+        <pose>11.0 -1 0.02 0 0 1.57</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.5 1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>landing_zone</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <!-- 中途点 -->
+      <link name="waypoint_1">
+        <pose>1.0 7.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_2">
+        <pose>3.0 1.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_3">
+        <pose>5.0 7.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_4">
+        <pose>7.0 1.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_5">
+        <pose>9.0 7.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_6">
+        <pose>11.0 1.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_7">
+        <pose>13.0 7.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_8">
+        <pose>15.0 1.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+      <link name="waypoint_9">
+        <pose>11.1 1.0 0.02 0 0 0</pose>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://texture_amov/texture.material</uri>
+              <name>point</name>
+            </script>
+          </material>
+        </visual>
+      </link>
       <!-- 前墙海报 -->
       <link name="poster1">
         <pose>3.0 7.65 1.5 0 1.57 1.57</pose>
@@ -279,6 +504,7 @@
       </link>
     </model>
 
+
     <!-- 会议桌 -->
     <!-- <model name='meeting_table'>
       <include>
@@ -291,7 +517,7 @@
     <model name='table1'>
       <include>
         <uri>model://table_chair</uri>
-	      <pose> 6 5 0.01 0 0 1.57</pose>
+	      <pose> 6 5.5 0.01 0 0 1.57</pose>
       </include>
     </model>
     <model name='table2'>
@@ -367,7 +593,7 @@
         </visual>
       </link>
       <link name="aruco_2">
-        <pose frame=''> 2.0 2.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 5.0 1.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -384,7 +610,7 @@
         </visual>
       </link>
       <link name="aruco_3">
-        <pose frame=''> 3.0 3.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 1.0 6.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -401,7 +627,7 @@
         </visual>
       </link>
       <link name="aruco_4">
-        <pose frame=''> 4.0 4.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 4.0 6.0 0.8 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -418,7 +644,7 @@
         </visual>
       </link>
       <link name="aruco_5">
-        <pose frame=''> 5.0 5.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 1.0 5.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -435,7 +661,7 @@
         </visual>
       </link>
       <link name="aruco_6">
-        <pose frame=''> 6.0 6.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 14.0 1.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -452,7 +678,7 @@
         </visual>
       </link>
       <link name="aruco_7">
-        <pose frame=''> 7.0 7.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 15.0 7.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -469,7 +695,7 @@
         </visual>
       </link>
       <link name="aruco_8">
-        <pose frame=''> 8.0 6.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 12.0 2.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
@@ -486,7 +712,7 @@
         </visual>
       </link>
       <link name="aruco_9">
-        <pose frame=''> 9.0 5.0 0.01 0.0 0.0 0.0</pose>
+        <pose frame=''> 9.0 3.0 0.01 0.0 0.0 0.0</pose>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
             <geometry>
