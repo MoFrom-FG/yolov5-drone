@@ -23,3 +23,12 @@ float32 yaw_error
 ## 类别
 int32 category
 
+## 移植之前吊舱代码
+float64 x   #cx
+float64 y   #cy
+float64 velx    #derrorX.output
+float64 vely    #derrorY.output
+float64 Ix  #xdt
+float64 Iy  #ydt
+float64 recsize #框选近大远小
+float64 selectrec   #初始框选大小

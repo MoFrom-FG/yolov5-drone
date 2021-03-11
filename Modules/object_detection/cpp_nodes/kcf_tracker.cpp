@@ -27,6 +27,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <prometheus_msgs/DetectionInfo.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Bool.h>
 #include <opencv2/imgproc/imgproc.hpp>  
 #include <opencv2/highgui/highgui.hpp>
@@ -34,7 +35,7 @@
 
 #include "kcftracker.hpp"
 #include "message_utils.h"
-
+#include "derror.h"
 
 using namespace std;
 using namespace cv;
@@ -49,6 +50,8 @@ cv::Mat cam_image_copy;
 boost::shared_mutex mutex_image_callback;
 bool image_status = false;
 boost::shared_mutex mutex_image_status;
+
+
 
 //【订阅】输入开关量
 ros::Subscriber switch_subscriber;
@@ -119,6 +122,14 @@ bool select_flag = false;
 bool bRenewROI = false;  // the flag to enable the implementation of KCF algorithm for the new chosen ROI
 bool bBeginKCF = false;
 
+float get_ros_time(ros::Time begin)
+{
+    ros::Time time_now = ros::Time::now();
+    float currTimeSec = time_now.sec-begin.sec;
+    float currTimenSec = time_now.nsec / 1e9 - begin.nsec / 1e9;
+    return (currTimeSec + currTimenSec);
+}
+
 void onMouse(int event, int x, int y, int, void*)
 {
     if (select_flag)
@@ -167,6 +178,7 @@ bool LAB = false;
 // Create KCFTracker object
 KCFTracker tracker(HOG, FIXEDWINDOW, MULTISCALE, LAB);
 
+DERROR derrorX, derrorY;
 
 int main(int argc, char **argv)
 {
@@ -244,9 +256,20 @@ int main(int argc, char **argv)
     cv::namedWindow(RGB_WINDOW);
     cv::setMouseCallback(RGB_WINDOW, onMouse, 0);
     float last_x(0), last_y(0), last_z(0), last_ax(0), last_ay(0);
+    float cur_time;
+    float last_time;
+    float last_error_x,last_error_y;
+    float dt;
+    float unfilter_vely,unfilter_velx;
+    ros::Time begin_time = ros::Time::now();
 
     while (ros::ok())
     {
+        cur_time = get_ros_time(begin_time);
+        dt = (cur_time - last_time);
+        if(dt>1.0 || dt<1.0){
+            dt = 0.05;
+        }
         while (!getImageStatus() && ros::ok()) 
         {
             if (local_print)
@@ -296,7 +319,7 @@ int main(int argc, char **argv)
         else if (bBeginKCF)
         {
             result = tracker.update(frame);
-            cv::rectangle(frame, result, cv::Scalar(255, 0, 0), 2, 8, 0);
+            
 
             // 将解算后的位置发给控制端
             detected = true;
@@ -306,6 +329,29 @@ int main(int argc, char **argv)
             double depth = kcf_tracker_h / result.height * fy;
             double cx = result.x + result.width / 2 - frame.cols / 2;
             double cy = result.y + result.height / 2 - frame.rows / 2;
+            pose_now.x = cx;
+            pose_now.y = cy;
+            pose_now.recsize = result.width*result.height;
+            pose_now.selectrec = selectRect.width*selectRect.height;
+            float error_x = pose_now.x;
+            float error_y = pose_now.y;
+
+            derrorX.add_error(error_x, cur_time);
+            derrorY.add_error(error_y, cur_time);
+            derrorX.derror_output();
+            derrorY.derror_output();
+            derrorX.show_error();
+            derrorY.show_error();
+
+            pose_now.velx = derrorX.Output;
+            pose_now.vely = derrorY.Output;
+
+            pose_now.Ix += pose_now.x * dt;
+            pose_now.Iy += pose_now.y * dt;
+
+            unfilter_velx = (pose_now.x - last_error_x) / dt;
+            unfilter_vely = (pose_now.y - last_error_y) / dt;
+
             pose_now.position[0] = depth * cx / fx;
             pose_now.position[1] = depth * cy / fy;
             pose_now.position[2] = depth;
@@ -313,11 +359,16 @@ int main(int argc, char **argv)
             pose_now.sight_angle[0] = cx / (frame.cols / 2) * atan((frame.cols / 2) / fx);
             pose_now.sight_angle[1] = cy / (frame.rows / 2) * atan((frame.rows / 2) / fy);
 
+            last_time = cur_time;
+            last_error_x = pose_now.x;
+            last_error_y = pose_now.y;
             last_x = pose_now.position[0];
             last_y = pose_now.position[1];
             last_z = pose_now.position[2];
             last_ax = pose_now.sight_angle[0];
             last_ay = pose_now.sight_angle[1];
+
+            cv::rectangle(frame, result, cv::Scalar(255, 0, 0), 2, 8, 0);
         }
 
         if (!detected)
@@ -330,9 +381,35 @@ int main(int argc, char **argv)
             pose_now.position[2] = last_z;
             pose_now.sight_angle[0] = last_ax;
             pose_now.sight_angle[1] = last_ay;
+            pose_now.x = 0.0;
+            pose_now.y = 0.0;
+            pose_now.Ix = 0.0;
+            pose_now.Iy = 0.0;
+            pose_now.velx = 0.0;
+            pose_now.vely = 0.0;
+            pose_now.recsize = 0.0;
+            pose_now.selectrec = 0.0;
         }
 
         pose_pub.publish(pose_now);
+
+        float left_point=frame.cols/2-20;
+        float right_point=frame.cols/2+20;
+        float up_point=frame.rows/2+20;
+        float down_point=frame.rows/2-20;
+        //draw
+        line(frame,Point(left_point,frame.rows/2),Point(right_point,frame.rows/2),Scalar(0,255,0),1,8);
+        line(frame,Point(frame.cols/2,down_point),Point(frame.cols/2,up_point),Scalar(0,255,0),1,8);
+        putText(frame,"x:",Point(50,60),FONT_HERSHEY_SIMPLEX,1,Scalar(255,23,0),3,8);
+        putText(frame,"y:",Point(50,90),FONT_HERSHEY_SIMPLEX,1,Scalar(255,23,0),3,8);
+
+        //draw
+        char s[20]="";
+        sprintf(s,"%.2f",pose_now.x);
+        putText(frame,s,Point(100,60),FONT_HERSHEY_SIMPLEX,1,Scalar(255,23,0),2,8);
+        sprintf(s,"%.2f",pose_now.y);
+        putText(frame,s,Point(100,90),FONT_HERSHEY_SIMPLEX,1,Scalar(255,23,0),2,8);
+
 
         imshow(RGB_WINDOW, frame);
         }

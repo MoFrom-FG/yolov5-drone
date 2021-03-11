@@ -157,6 +157,7 @@ add_definitions(-O4 -g)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+  # INCLUDE_DIRS include
    CATKIN_DEPENDS message_runtime std_msgs
 )
 
@@ -167,6 +168,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
+  include
   src/kcf_tracker_lib
   src/ellipse_lib
   src/darknet_lib/src
@@ -324,6 +326,8 @@ add_library(kcftrackerlib
     src/kcf_tracker_lib/tracker.h
     src/kcf_tracker_lib/kcftracker.cpp
     src/kcf_tracker_lib/fhog.cpp
+    # src/kcf_tracker_lib/derror.h
+    # src/kcf_tracker_lib/pid.h
 )
 target_link_libraries(kcftrackerlib ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 
